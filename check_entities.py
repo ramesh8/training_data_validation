@@ -22,10 +22,21 @@ def update_entity(doc, update):
 def save_error(error, id):
     errors.insert_one({"error":error, "ent_id":id})
 
-for ent in tqdm(ents.find()):
+for ent in tqdm(ents.find({"docbin":{"$exists":False}})):
+    if "docbin" in ent:
+        continue
     db = DocBin()
-    text = ent["text"]
-    entlist = ent["entities"]
+    if "text" in ent:
+        text = ent["text"]
+    else:
+        save_error("text not found",ent["_id"])
+        continue
+    if "entities" in ent:    
+        entlist = ent["entities"]
+    else:
+        save_error("entities not found",ent["_id"])
+        continue
+
     if len(entlist)==0: #means no entities marked
         update_entity(ent, {"docbin":False})
         continue
