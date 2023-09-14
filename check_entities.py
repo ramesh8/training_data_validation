@@ -54,10 +54,11 @@ for ent in tqdm(ents.find({"docbin":{"$exists":False}})):
                 update_entity(ent, {"docbin":False})
                 continue
             else:
-                update_entity(ent, {"docbin":True})
+                
                 valid_ents.append(span)
         doc.ents = valid_ents
         db.add(doc)
+        update_entity(ent, {"docbin":True})
     except Exception as ex:
         save_error(str(ex), ent["_id"])
         update_entity(ent, {"docbin":False})
