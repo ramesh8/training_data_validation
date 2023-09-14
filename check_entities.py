@@ -22,7 +22,7 @@ def update_entity(doc, update):
 def save_error(error, id):
     errors.insert_one({"error":error, "ent_id":id})
 
-for ent in tqdm(ents.find({"docbin":{"$exists":False}})):
+for ent in tqdm(ents.find()):
     if "docbin" in ent:
         continue
     db = DocBin()
